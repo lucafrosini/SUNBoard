@@ -9,6 +9,6 @@ http://creativecommons.org/licenses/by-sa/4.0/
 This work has been developed to multiplex NMEA 0183 of my Barberis SHOW 32 called "SUN", from this the name of the repository.
 
 The ideas of this work, background information and documentation will be produced as soon as possible and it will be published on my personal website.
-When heready you will find here the link to the documentation.
+When ready you will find here the link to the documentation.
 
 
