@@ -84,7 +84,7 @@ void analizeCharacter(char c, String &sentence){
     /* 
      * If there are some disturb on the received signal 
      * the \n character cannot arrive. We discard the
-     * collected data and we start with a new frash sentence.
+     * collected data and we start with a new fresh sentence.
      */
     if(c == '$'){
       sentence = "";
