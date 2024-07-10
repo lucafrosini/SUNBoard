@@ -44,7 +44,7 @@ void setup() {
   // hardware serial 1,2,3 and from software serial.
   // To support multiplexing with no deplay a rate of 19200 is enough, 
   // but higher if supported by receiver if also fine (or better)
-  Serial.begin(57600);
+  Serial.begin(4800);
   
   // Initialize hardware serial ports to be multiplexed
   Serial1.begin(4800);
@@ -59,7 +59,7 @@ void setup() {
 void loop() {
   hardwareSerialEvent(Serial1, serial1Sentence);
   hardwareSerialEvent(Serial2, serial2Sentence);
-  hardwareSerialEvent(Serial3, serial3Sentence);
+  //hardwareSerialEvent(Serial3, serial3Sentence);
   softSerialEvent(softSerial, softSerialSentence);
 }
 
@@ -80,7 +80,7 @@ void softSerialEvent(SoftwareSerial &serial, String &sentence) {
 void analizeCharacter(char c, String &sentence){
   if(c == '\n') {
     // Verify checksum
-    if (!isChecksumValid(sentence)) {
+    if (isChecksumValid(sentence)) {
       multiplexSentence(sentence);
     }
     
@@ -243,10 +243,12 @@ String convertMWVtoVWR(const String& mwvSentence) {
 
 void multiplexSentence(String &sentence){
   Serial.println(sentence);
+  Serial3.println(sentence);
 
   String vwrSentenceFromMWV = convertMWVtoVWR(sentence);
-  if (!vwrSentenceFromMWV.isEmpty()) {
-    Serial.println(sentence);
+  if (vwrSentenceFromMWV.length() > 0) {
+    Serial.println(vwrSentenceFromMWV);
+    Serial3.println(vwrSentenceFromMWV);
   }
 
   // Here you can do any other operation you need
