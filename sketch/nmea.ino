@@ -134,7 +134,7 @@ NMEA 0183 Sentence Formats:
 
 MWV - Wind Speed and Angle
 -------------------------------------------
-$--MWV, x.x, a, x.x, a, a*hh<CR><LF>
+$--MWV, x.x, a, x.x, a, a*hh<LF>
 -------------------------------------------
 Fields:
 1. Wind Angle, 0 to 360 degrees
@@ -149,7 +149,7 @@ Fields:
 
 VWR - Relative Wind Speed and Angle
 -------------------------------------------
-$--VWR, x.x, a, x.x, N, x.x, M, x.x, K*hh<CR><LF>
+$--VWR, x.x, a, x.x, N, x.x, M, x.x, K*hh<LF>
 -------------------------------------------
 Fields:
 1. Wind Direction, 0 to 360 degrees
