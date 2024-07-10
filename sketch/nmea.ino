@@ -134,7 +134,7 @@ NMEA 0183 Sentence Formats:
 
 MWV - Wind Speed and Angle
 -------------------------------------------
-$--MWV, x.x, a, x.x, a, a*hh<LF>
+$--MWV, x.x, a, x.x, a, a*hh<CR><LF>
 -------------------------------------------
 Fields:
 1. Wind Angle, 0 to 360 degrees
@@ -149,7 +149,7 @@ Fields:
 
 VWR - Relative Wind Speed and Angle
 -------------------------------------------
-$--VWR, x.x, a, x.x, N, x.x, M, x.x, K*hh<LF>
+$--VWR, x.x, a, x.x, N, x.x, M, x.x, K*hh<CR><LF>
 -------------------------------------------
 Fields:
 1. Wind Direction, 0 to 360 degrees
@@ -192,7 +192,7 @@ String convertVWRtoMWV(const String& vwrSentence) {
 
   // Calculate and add the checksum
   char checksum = calculateChecksum(mwvSentence);
-  mwvSentence += "*" + String(checksum, HEX) + "\n";
+  mwvSentence += "*" + String(checksum, HEX) + "\r\n";
 
   return mwvSentence;
 }
@@ -235,7 +235,7 @@ String convertMWVtoVWR(const String& mwvSentence) {
 
   // Calculate and add the checksum
   char checksum = calculateChecksum(vwrSentence);
-  vwrSentence += "*" + String(checksum, HEX) + "\n";
+  vwrSentence += "*" + String(checksum, HEX) + "\r\n";
 
   return vwrSentence;
 }
@@ -247,8 +247,8 @@ void multiplexSentence(String &sentence){
 
   String vwrSentenceFromMWV = convertMWVtoVWR(sentence);
   if (vwrSentenceFromMWV.length() > 0) {
-    Serial.println(vwrSentenceFromMWV);
-    Serial3.println(vwrSentenceFromMWV);
+    Serial.println(sentence);
+    Serial3.println(sentence);
   }
 
   // Here you can do any other operation you need
