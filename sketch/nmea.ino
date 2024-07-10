@@ -192,7 +192,7 @@ String convertVWRtoMWV(const String& vwrSentence) {
 
   // Calculate and add the checksum
   char checksum = calculateChecksum(mwvSentence);
-  mwvSentence += "*" + String(checksum, HEX) + "\r\n";
+  mwvSentence += "*" + String(checksum, HEX) + "\n";
 
   return mwvSentence;
 }
@@ -235,7 +235,7 @@ String convertMWVtoVWR(const String& mwvSentence) {
 
   // Calculate and add the checksum
   char checksum = calculateChecksum(vwrSentence);
-  vwrSentence += "*" + String(checksum, HEX) + "\r\n";
+  vwrSentence += "*" + String(checksum, HEX) + "\n";
 
   return vwrSentence;
 }
