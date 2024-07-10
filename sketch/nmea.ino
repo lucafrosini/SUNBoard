@@ -165,14 +165,15 @@ Fields:
 
 // Function to convert a VWR sentence to an MWV sentence
 String convertVWRtoMWV(const String& vwrSentence) {
+
   // Verify that the sentence contains 'VWR'
   int vwrIndex = vwrSentence.indexOf("VWR");
-  if (vwrIndex == -1 || vwrIndex > 3) { // VWR should be at position 3-5
+  if (vwrIndex != 3) { // VWR should be at position 3-5
     return "";
   }
 
   // Split the sentence into components
-  int commaIndex1 = vwrSentence.indexOf(',', vwrIndex + 3);
+  int commaIndex1 = vwrSentence.indexOf(',', vwrIndex + 4);
   int commaIndex2 = vwrSentence.indexOf(',', commaIndex1 + 1);
   int commaIndex3 = vwrSentence.indexOf(',', commaIndex2 + 1);
 
@@ -197,40 +198,62 @@ String convertVWRtoMWV(const String& vwrSentence) {
   return mwvSentence;
 }
 
-// Function to convert an MWV sentence to a VWR sentence
+// Function to convert MWV sentence to VWR sentence
 String convertMWVtoVWR(const String& mwvSentence) {
   // Verify that the sentence contains 'MWV'
   int mwvIndex = mwvSentence.indexOf("MWV");
-  if (mwvIndex == -1 || mwvIndex > 3) { // MWV should be at position 3-5
+  if (mwvIndex != 3) { // MWV should be at position 3
     return "";
   }
 
   // Split the sentence into components
-  int commaIndex1 = mwvSentence.indexOf(',', mwvIndex + 3);
+  int commaIndex1 = mwvSentence.indexOf(',', mwvIndex + 4);
   int commaIndex2 = mwvSentence.indexOf(',', commaIndex1 + 1);
   int commaIndex3 = mwvSentence.indexOf(',', commaIndex2 + 1);
   int commaIndex4 = mwvSentence.indexOf(',', commaIndex3 + 1);
-
+  
   if (commaIndex4 == -1) {
     return "";
   }
 
   // Extract the wind angle
   String windAngle = mwvSentence.substring(mwvIndex + 4, commaIndex1);
-
+  
   // Extract the reference (Relative/True)
-  char reference = mwvSentence.charAt(commaIndex2 + 1);
+  char reference = mwvSentence.charAt(commaIndex1 + 1);
 
-  // Extract the wind speed in knots
-  String windSpeedKnots = mwvSentence.substring(commaIndex3 + 1, commaIndex4);
+  // Extract the wind speed
+  String windSpeed = mwvSentence.substring(commaIndex2 +1, commaIndex3);
+ 
+  // Extract the wind speed units
+  char windSpeedUnits = mwvSentence.charAt(commaIndex3 + 1);
 
-  // Convert wind speed from knots to meters per second and kilometers per hour
-  float speedKnots = windSpeedKnots.toFloat();
-  float speedMetersPerSecond = speedKnots * 0.514444;
-  float speedKilometersPerHour = speedKnots * 1.852;
+  // Convert wind speed to the other units
+  float speedValue = windSpeed.toFloat();
+  float speedKnots, speedMetersPerSecond, speedKilometersPerHour;
+
+  switch (windSpeedUnits) {
+    case 'K': // Kilometers Per Hour
+      speedKilometersPerHour = speedValue;
+      speedMetersPerSecond = speedKilometersPerHour / 3.6;
+      speedKnots = speedKilometersPerHour / 1.852;
+      break;
+    case 'M': // Meters Per Second
+      speedMetersPerSecond = speedValue;
+      speedKilometersPerHour = speedMetersPerSecond * 3.6;
+      speedKnots = speedMetersPerSecond / 0.514444;
+      break;
+    case 'N': // Knots
+      speedKnots = speedValue;
+      speedMetersPerSecond = speedKnots * 0.514444;
+      speedKilometersPerHour = speedKnots * 1.852;
+      break;
+    default:
+      return "";
+  }
 
   // Construct the VWR sentence
-  String vwrSentence = "$IIVWR," + windAngle + "," + (reference == 'R' ? "R" : "L") + "," + windSpeedKnots + ",N,";
+  String vwrSentence = "$IIVWR," + windAngle + "," + (reference == 'R' ? "R" : "L") + "," + String(speedKnots, 1) + ",N,";
   vwrSentence += String(speedMetersPerSecond, 1) + ",M," + String(speedKilometersPerHour, 1) + ",K";
 
   // Calculate and add the checksum
