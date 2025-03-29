@@ -59,7 +59,7 @@ void setup() {
 void loop() {
   hardwareSerialEvent(Serial1, serial1Sentence);
   hardwareSerialEvent(Serial2, serial2Sentence);
-  //hardwareSerialEvent(Serial3, serial3Sentence);
+  hardwareSerialEvent(Serial3, serial3Sentence);
   softSerialEvent(softSerial, softSerialSentence);
 }
 
@@ -266,12 +266,18 @@ String convertMWVtoVWR(const String& mwvSentence) {
 
 void multiplexSentence(String &sentence){
   Serial.println(sentence);
+  Serial1.println(sentence);
+  Serial2.println(sentence);
   Serial3.println(sentence);
+  softSerial.println(sentence);
 
   String vwrSentenceFromMWV = convertMWVtoVWR(sentence);
   if (vwrSentenceFromMWV.length() > 0) {
-    Serial.println(sentence);
-    Serial3.println(sentence);
+    Serial.println(vwrSentenceFromMWV);
+    Serial1.println(vwrSentenceFromMWV);
+    Serial2.println(vwrSentenceFromMWV);
+    Serial3.println(vwrSentenceFromMWV);
+    softSerial.println(vwrSentenceFromMWV);
   }
 
   // Here you can do any other operation you need
