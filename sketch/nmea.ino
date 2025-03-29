@@ -234,6 +234,7 @@ void multiplexSentence(String &sentence){
   Serial1.println(sentence);
   Serial2.println(sentence);
   Serial3.println(sentence);
+  softSerial.println(sentence);
 
   String vwrSentenceFromMWV = convertMWVtoVWR(sentence);
   if (vwrSentenceFromMWV.length() > 0) {
@@ -241,6 +242,7 @@ void multiplexSentence(String &sentence){
     Serial1.println(vwrSentenceFromMWV);
     Serial2.println(vwrSentenceFromMWV);
     Serial3.println(vwrSentenceFromMWV);
+    softSerial.println(vwrSentenceFromMWV);
   }
 
   // Here you can do any other operation you need
