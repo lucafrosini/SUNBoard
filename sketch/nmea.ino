@@ -163,40 +163,6 @@ Fields:
 9. Checksum
 */
 
-// Function to convert a VWR sentence to an MWV sentence
-String convertVWRtoMWV(const String& vwrSentence) {
-
-  // Verify that the sentence contains 'VWR'
-  int vwrIndex = vwrSentence.indexOf("VWR");
-  if (vwrIndex != 3) { // VWR should be at position 3-5
-    return "";
-  }
-
-  // Split the sentence into components
-  int commaIndex1 = vwrSentence.indexOf(',', vwrIndex + 4);
-  int commaIndex2 = vwrSentence.indexOf(',', commaIndex1 + 1);
-  int commaIndex3 = vwrSentence.indexOf(',', commaIndex2 + 1);
-
-  if (commaIndex3 == -1) {
-    return "";
-  }
-
-  // Extract the wind angle and direction
-  String windAngle = vwrSentence.substring(vwrIndex + 4, commaIndex1);
-  char windDirection = vwrSentence.charAt(commaIndex1 + 1);
-
-  // Extract the wind speed in knots
-  String windSpeedKnots = vwrSentence.substring(commaIndex2 + 1, commaIndex3);
-
-  // Construct the MWV sentence
-  String mwvSentence = "$IIMWV," + windAngle + "," + (windDirection == 'R' ? "R" : "L") + "," + windSpeedKnots + ",N,A";
-
-  // Calculate and add the checksum
-  char checksum = calculateChecksum(mwvSentence);
-  mwvSentence += "*" + String(checksum, HEX) + "\r\n";
-
-  return mwvSentence;
-}
 
 // Function to convert MWV sentence to VWR sentence
 String convertMWVtoVWR(const String& mwvSentence) {
@@ -263,13 +229,11 @@ String convertMWVtoVWR(const String& mwvSentence) {
   return vwrSentence;
 }
 
-
 void multiplexSentence(String &sentence){
   Serial.println(sentence);
   Serial1.println(sentence);
   Serial2.println(sentence);
   Serial3.println(sentence);
-  softSerial.println(sentence);
 
   String vwrSentenceFromMWV = convertMWVtoVWR(sentence);
   if (vwrSentenceFromMWV.length() > 0) {
@@ -277,7 +241,6 @@ void multiplexSentence(String &sentence){
     Serial1.println(vwrSentenceFromMWV);
     Serial2.println(vwrSentenceFromMWV);
     Serial3.println(vwrSentenceFromMWV);
-    softSerial.println(vwrSentenceFromMWV);
   }
 
   // Here you can do any other operation you need
